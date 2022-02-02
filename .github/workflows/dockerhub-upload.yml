@@ -26,6 +26,7 @@ jobs:
         uses: mr-smithers-excellent/docker-build-push@v5
         with:
           image: hazemaqilah/slave-node
+          tags: latest
           registry: docker.io
           dockerfile: Dockerfile
           username: ${{ secrets.DOCKER_USERNAME }}
