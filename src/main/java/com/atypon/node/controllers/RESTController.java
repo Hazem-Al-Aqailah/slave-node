@@ -2,17 +2,15 @@ package com.atypon.node.controllers;
 
 import static com.atypon.node.utility.Cash.*;
 
+import com.atypon.node.network.MasterCommunicator;
 import com.atypon.node.utility.FindBy;
 import com.atypon.node.database.DocumentDAO;
-import com.atypon.node.network.DatabaseReceiver;
 import com.fasterxml.jackson.databind.JsonNode;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.core.env.Environment;
 
 import java.util.List;
 
@@ -21,7 +19,6 @@ import java.util.List;
 @RequestMapping("/api/documents")
 public class RESTController {
 
-  @Autowired public Environment env; // Environment Object containts the port number
   private final DocumentDAO dao = DocumentDAO.getInstance();
 
   @GetMapping
@@ -59,45 +56,24 @@ public class RESTController {
     return ResponseEntity.ok(nodes);
   }
 
-  //  private ResponseEntity<List<JsonNode>> getListResponseEntity(@PathVariable String property) {
-  //    List<JsonNode> nodes;
-  //    if (isCashed(property)) {
-  //      nodes = getCashedValue(property);
-  //    } else {
-  //      nodes = FindBy.name(property);
-  //      if (nodes == null) {
-  //        return new ResponseEntity(null, HttpStatus.NOT_FOUND);
-  //      }
-  //      cashProperty(property,nodes);
-  //    }
-  //    return ResponseEntity.ok(nodes);
-  //  }
-
   @GetMapping("/{id}")
   public ResponseEntity<JsonNode> findById(@PathVariable String id) {
-    JsonNode node = dao.findById(id);
-    if (node == null) {
-      return new ResponseEntity(null, HttpStatus.NOT_FOUND);
+    try {
+      JsonNode node = dao.findById(id);
+      return ResponseEntity.ok(node);
+    } catch (NullPointerException e) {
+      e.printStackTrace();
+      System.out.println("ID not found");
     }
-    return ResponseEntity.ok(node);
-  }
-
-  @GetMapping("/status")
-  public ResponseEntity<String> status() {
-    return ResponseEntity.ok(env.getProperty("local.server.port"));
+    return new ResponseEntity(null, HttpStatus.NOT_FOUND);
   }
 
   @PostMapping("/update")
   public ResponseEntity<String> updateData(@RequestBody String serverRequest) {
     try {
-      if (serverRequest.equals("update")) {
-        DatabaseReceiver.consume();
-        flushCash();
-        return ResponseEntity.ok("updated");
-      } else if (serverRequest.equals("check")) {
-        return ResponseEntity.ok("im alive");
-      }
+      return MasterCommunicator.updateResponse(serverRequest);
     } catch (Exception e) {
+      e.printStackTrace();
       System.out.println("error communicating with the server" + e);
     }
     return new ResponseEntity(null, HttpStatus.NOT_FOUND);

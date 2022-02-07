@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static com.atypon.node.utility.PropertyIndex.indexName;
-import static com.atypon.node.utility.PropertyIndex.indexSchema;
+import static com.atypon.node.utility.PropertyIndex.indexProperties;
+
 
 @Repository
 @Profile("database")
@@ -28,21 +28,15 @@ public class DocumentDAO implements DAOInterface {
   }
 
   @Override
-  public void receiveDataFromApiAndIndex(List<JsonNode> list) {
-    for (JsonNode j : list) {
-      storeJson(j);
-    }
-    indexName();
-    indexSchema();
+  public void receiveDataFromApiAndIndex(List<JsonNode> jsonNodes) {
+    storeJson(jsonNodes);
+    indexProperties();
   }
 
-  @Override
-  public void storeJson(JsonNode... jsons) {
+  private void storeJson(List<JsonNode> jsons) {
     for (JsonNode j : jsons) {
       DB2.put(j.get("id").asText(), j);
     }
-    indexName();
-    indexSchema();
   }
 
   @Override

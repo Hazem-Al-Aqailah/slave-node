@@ -8,8 +8,6 @@ public interface DAOInterface {
 
   void receiveDataFromApiAndIndex(List<JsonNode> list);
 
-  void storeJson(JsonNode... jsons);
-
   List<JsonNode> retrieveAll();
 
   JsonNode findById(String id);

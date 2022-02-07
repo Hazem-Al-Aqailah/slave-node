@@ -10,7 +10,7 @@ import java.util.Map;
 import static com.atypon.node.utility.PropertyIndex.nameIndex;
 import static com.atypon.node.utility.PropertyIndex.schemaIndex;
 
-public class FindBy implements Utility {
+public class FindBy implements DataBaseUtility {
   static DocumentDAO dao = DocumentDAO.getInstance();
 
   private FindBy() {}

@@ -13,7 +13,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 @Service
-public class DatabaseReceiver implements NetworkInterface {
+public class DatabaseReceiver implements NetworkUtility {
 
   static DocumentDAO dao = DocumentDAO.getInstance();
 
@@ -24,9 +24,11 @@ public class DatabaseReceiver implements NetworkInterface {
     /**
      * works great with the database receiving
      * herokuURL
-     * "https://master-node-atypon.herokuapp.com/api/documents";
-     * localURL for the docker container
-     * "http://master:8080/api/documents"; 
+     * "https://master-node-atypon.herokuapp.com/api/documents"
+     * localURL for the docker container on the docker network
+     * "http://master:8080/api/documents"
+     * local machine URL
+     * "http://localhost:8080/api/documents"
      */
     String localURL = "http://localhost:8080/api/documents";
 

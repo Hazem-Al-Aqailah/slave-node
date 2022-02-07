@@ -8,22 +8,38 @@ import javax.annotation.PostConstruct;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import static com.atypon.node.utility.Cash.flushCash;
+
 @Service
-public class MasterCommunicator implements NetworkInterface {
+public class MasterCommunicator implements NetworkUtility {
 
   private MasterCommunicator() {}
 
   @PostConstruct
   public static void sendPort() throws URISyntaxException {
-    // does not work since the website won't receive the port of this machine's ip
-    // String herokuURL = "https://master-node-atypon.herokuapp.com/api/documents/receiver";
-//    String localURL = "http://master:8080/api/documents/receiver";
-    String localURL = "http://localhost:8080/api/documents/receiver";
+    /**
+     * does not work since the website won't receive the port of this machine's ip
+     * HerokuURL:"https://master-node-atypon.herokuapp.com/api/documents/receiver"
+     * Docker network URL:"http://master:8080/api/documents/receiver"
+     * local machine URL: "http://localhost:8080/api/documents/receiver"
+     **/
+    String URL = "http://localhost:8080/api/documents/receiver";
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
-    URI uri = new URI(localURL);
+    URI uri = new URI(URL);
     HttpEntity<String> formEntity = new HttpEntity<>("sending port to the master", headers);
     RestTemplate template = new RestTemplate();
     template.exchange(uri, HttpMethod.POST, formEntity, String.class);
+  }
+
+  public static ResponseEntity<String> updateResponse(String serverRequest) {
+    if (serverRequest.equals("update")) {
+      DatabaseReceiver.consume();
+      flushCash();
+      return ResponseEntity.ok("updated");
+    } else if (serverRequest.equals("check")) {
+      return ResponseEntity.ok("im alive");
+    }
+    return new ResponseEntity(null, HttpStatus.NOT_FOUND);
   }
 }

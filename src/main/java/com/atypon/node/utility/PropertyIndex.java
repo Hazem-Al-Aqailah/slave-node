@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PropertyIndex implements Utility {
+public class PropertyIndex implements DataBaseUtility {
   private PropertyIndex() {}
 
   static DocumentDAO dao = DocumentDAO.getInstance();
@@ -15,7 +15,7 @@ public class PropertyIndex implements Utility {
 
   protected static final Map<String, ArrayList<String>> nameIndex = new HashMap<>();
 
-  public static void indexName() {
+  private static void indexName() {
     nameIndex.clear();
     for (JsonNode j : dao.retrieveAll()) {
       String name = j.get("author").asText();
@@ -27,7 +27,7 @@ public class PropertyIndex implements Utility {
     }
   }
 
-  public static void indexSchema() {
+  private static void indexSchema() {
     schemaIndex.clear();
     for (JsonNode j : dao.retrieveAll()) {
       String schema = j.get("schema").asText();
@@ -39,8 +39,15 @@ public class PropertyIndex implements Utility {
     }
   }
 
-  // used in indexName and indexSchema, where it adds to the list
-  // if it exists or create one and add it if it does not
+  public static void indexProperties(){
+    indexName();
+    indexSchema();
+  }
+
+  /**
+   * used in indexName and indexSchema, where it adds to the list if it exists or create one and add
+   * it if it does not *
+   */
   private static void addToListOfIndexedProperty(
       String indexedValue, String item, Map<String, ArrayList<String>> indexedMap) {
     ArrayList<String> itemsList = indexedMap.get(indexedValue);

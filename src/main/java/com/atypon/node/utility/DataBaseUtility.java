@@ -1,4 +1,4 @@
 package com.atypon.node.utility;
 
-public interface Utility {
+public interface DataBaseUtility {
 }
