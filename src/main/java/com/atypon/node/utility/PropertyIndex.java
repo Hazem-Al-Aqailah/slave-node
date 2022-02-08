@@ -39,17 +39,12 @@ public class PropertyIndex implements DataBaseUtility {
     }
   }
 
-  public static void indexProperties(){
-    indexName();
-    indexSchema();
-  }
-
   /**
    * used in indexName and indexSchema, where it adds to the list if it exists or create one and add
    * it if it does not *
    */
   private static void addToListOfIndexedProperty(
-      String indexedValue, String item, Map<String, ArrayList<String>> indexedMap) {
+          String indexedValue, String item, Map<String, ArrayList<String>> indexedMap) {
     ArrayList<String> itemsList = indexedMap.get(indexedValue);
     // if list does not exist create it
     if (itemsList == null) {
@@ -61,4 +56,11 @@ public class PropertyIndex implements DataBaseUtility {
       if (!itemsList.contains(item)) itemsList.add(item);
     }
   }
+
+  public static void indexProperties(){
+    indexName();
+    indexSchema();
+  }
+
+
 }
