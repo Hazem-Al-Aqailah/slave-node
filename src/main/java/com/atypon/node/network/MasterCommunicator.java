@@ -19,10 +19,10 @@ public class MasterCommunicator implements NetworkUtility {
   public static void sendPort() throws URISyntaxException {
     /**
      * does not work since the website won't receive the port of this machine's ip
-     * HerokuURL:"https://master-node-atypon.herokuapp.com/api/documents/receiver"
-     * Docker network URL:"http://master:8080/api/documents/receiver"
-     * local machine URL: "http://localhost:8080/api/documents/receiver"
-     **/
+     * HerokuURL:"https://master-node-atypon.herokuapp.com/api/documents/receiver" Docker network
+     * URL:"http://master:8080/api/documents/receiver" local machine URL:
+     * "http://localhost:8080/api/documents/receiver"
+     */
     String URL = "http://localhost:8080/api/documents/receiver";
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
@@ -32,14 +32,22 @@ public class MasterCommunicator implements NetworkUtility {
     template.exchange(uri, HttpMethod.POST, formEntity, String.class);
   }
 
-  public static ResponseEntity<String> updateResponse(String serverRequest) {
+  public static ResponseEntity<String> getResponseFromNode(String serverRequest) {
     if (serverRequest.equals("update")) {
-      DatabaseReceiver.consume();
-      flushCash();
-      return ResponseEntity.ok("updated");
+      return updateResponse(serverRequest);
     } else if (serverRequest.equals("check")) {
-      return ResponseEntity.ok("im alive");
+      return healthCheckResponse(serverRequest);
     }
     return new ResponseEntity(null, HttpStatus.NOT_FOUND);
+  }
+
+  private static ResponseEntity<String> healthCheckResponse(String serverRequest) {
+    return ResponseEntity.ok("im alive");
+  }
+
+  private static ResponseEntity<String> updateResponse(String serverRequest) {
+    DatabaseReceiver.consume();
+    flushCash();
+    return ResponseEntity.ok("updated");
   }
 }

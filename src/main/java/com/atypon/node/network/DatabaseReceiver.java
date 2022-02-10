@@ -30,6 +30,7 @@ public class DatabaseReceiver implements NetworkUtility {
      * local machine URL
      * "http://localhost:8080/api/documents"
      */
+
     String localURL = "http://localhost:8080/api/documents";
 
     RestTemplate template = new RestTemplate();

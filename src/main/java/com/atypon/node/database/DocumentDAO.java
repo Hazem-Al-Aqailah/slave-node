@@ -1,5 +1,8 @@
 package com.atypon.node.database;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -10,7 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import static com.atypon.node.utility.PropertyIndex.indexProperties;
-
 
 @Repository
 @Profile("database")
@@ -35,7 +37,12 @@ public class DocumentDAO implements DAOInterface {
 
   private void storeJson(List<JsonNode> jsons) {
     for (JsonNode j : jsons) {
-      DB2.put(j.get("id").asText(), j);
+      try {
+        DB2.put(j.get("id").asText(), j);
+      } catch (NullPointerException e) {
+        e.printStackTrace();
+        System.out.println("error while extracting data");
+      }
     }
   }
 

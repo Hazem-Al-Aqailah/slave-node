@@ -71,7 +71,7 @@ public class RESTController {
   @PostMapping("/update")
   public ResponseEntity<String> updateData(@RequestBody String serverRequest) {
     try {
-      return MasterCommunicator.updateResponse(serverRequest);
+      return MasterCommunicator.getResponseFromNode(serverRequest);
     } catch (Exception e) {
       e.printStackTrace();
       System.out.println("error communicating with the server" + e);

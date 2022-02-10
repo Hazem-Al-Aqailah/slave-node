@@ -15,6 +15,11 @@ public class PropertyIndex implements DataBaseUtility {
 
   protected static final Map<String, ArrayList<String>> nameIndex = new HashMap<>();
 
+  public static void indexProperties() {
+    indexName();
+    indexSchema();
+  }
+
   private static void indexName() {
     nameIndex.clear();
     for (JsonNode j : dao.retrieveAll()) {
@@ -44,7 +49,7 @@ public class PropertyIndex implements DataBaseUtility {
    * it if it does not *
    */
   private static void addToListOfIndexedProperty(
-          String indexedValue, String item, Map<String, ArrayList<String>> indexedMap) {
+      String indexedValue, String item, Map<String, ArrayList<String>> indexedMap) {
     ArrayList<String> itemsList = indexedMap.get(indexedValue);
     // if list does not exist create it
     if (itemsList == null) {
@@ -56,11 +61,4 @@ public class PropertyIndex implements DataBaseUtility {
       if (!itemsList.contains(item)) itemsList.add(item);
     }
   }
-
-  public static void indexProperties(){
-    indexName();
-    indexSchema();
-  }
-
-
 }
