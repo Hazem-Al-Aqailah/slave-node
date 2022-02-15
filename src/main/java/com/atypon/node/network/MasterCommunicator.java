@@ -32,20 +32,20 @@ public class MasterCommunicator implements NetworkUtility {
     template.exchange(uri, HttpMethod.POST, formEntity, String.class);
   }
 
-  public static ResponseEntity<String> getResponseFromNode(String serverRequest) {
+  public static ResponseEntity<String> nodeResponse(String serverRequest) {
     if (serverRequest.equals("update")) {
-      return updateResponse(serverRequest);
+      return updateResponse();
     } else if (serverRequest.equals("check")) {
-      return healthCheckResponse(serverRequest);
+      return healthCheckResponse();
     }
-    return new ResponseEntity(null, HttpStatus.NOT_FOUND);
+    return new ResponseEntity(null, HttpStatus.BAD_REQUEST);
   }
 
-  private static ResponseEntity<String> healthCheckResponse(String serverRequest) {
+  private static ResponseEntity<String> healthCheckResponse() {
     return ResponseEntity.ok("im alive");
   }
 
-  private static ResponseEntity<String> updateResponse(String serverRequest) {
+  private static ResponseEntity<String> updateResponse() {
     DatabaseReceiver.consume();
     flushCash();
     return ResponseEntity.ok("updated");

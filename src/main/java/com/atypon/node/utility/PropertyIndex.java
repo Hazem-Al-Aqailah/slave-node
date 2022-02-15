@@ -15,32 +15,40 @@ public class PropertyIndex implements DataBaseUtility {
 
   protected static final Map<String, ArrayList<String>> nameIndex = new HashMap<>();
 
+  protected static final Map<String, ArrayList<String>> dateIndex = new HashMap<>();
+
   public static void indexProperties() {
     indexName();
     indexSchema();
+    indexDate();
   }
 
   private static void indexName() {
-    nameIndex.clear();
-    for (JsonNode j : dao.retrieveAll()) {
-      String name = j.get("author").asText();
-      String id = j.get("id").asText();
-      if (nameIndex.containsKey(name)) {
-        nameIndex.get(name).add(id);
-      }
-      addToListOfIndexedProperty(name, id, nameIndex);
-    }
+    addToIndexedHashMap(nameIndex, "author");
   }
 
   private static void indexSchema() {
-    schemaIndex.clear();
+    addToIndexedHashMap(schemaIndex, "schema");
+  }
+
+  private static void indexDate() {
+    addToIndexedHashMap(dateIndex, "date");
+  }
+
+  private static void addToIndexedHashMap(
+      Map<String, ArrayList<String>> propertyMap, String property) {
+    propertyMap.clear();
     for (JsonNode j : dao.retrieveAll()) {
-      String schema = j.get("schema").asText();
-      String id = j.get("id").asText();
-      if (schemaIndex.containsKey(schema)) {
-        schemaIndex.get(schema).add(id);
+      try {
+        String propertyValue = j.get(property).asText();
+        String id = j.get("id").asText();
+        if (propertyMap.containsKey(propertyValue)) {
+          propertyMap.get(propertyValue).add(id);
+        }
+        addToListOfIndexedProperty(propertyValue, id, propertyMap);
+      } catch (NullPointerException e) {
+
       }
-      addToListOfIndexedProperty(schema, id, schemaIndex);
     }
   }
 
@@ -58,7 +66,9 @@ public class PropertyIndex implements DataBaseUtility {
       indexedMap.put(indexedValue, itemsList);
     } else {
       // add if item is not already in list
-      if (!itemsList.contains(item)) itemsList.add(item);
+      if (!itemsList.contains(item)) {
+        itemsList.add(item);
+      }
     }
   }
 }

@@ -22,15 +22,10 @@ public class DatabaseReceiver implements NetworkUtility {
   @PostConstruct
   public static void consume() {
     /**
-     * works great with the database receiving
-     * herokuURL
-     * "https://master-node-atypon.herokuapp.com/api/documents"
-     * localURL for the docker container on the docker network
-     * "http://master:8080/api/documents"
-     * local machine URL
+     * herokuURL "https://master-node-atypon.herokuapp.com/api/documents" localURL for the docker
+     * container on the docker network "http://master:8080/api/documents" local machine URL
      * "http://localhost:8080/api/documents"
      */
-
     String localURL = "http://localhost:8080/api/documents";
 
     RestTemplate template = new RestTemplate();
@@ -49,7 +44,8 @@ public class DatabaseReceiver implements NetworkUtility {
     try {
       dao.receiveDataFromApiAndIndex(list);
     } catch (Exception e) {
-      System.out.println("error communicating with the server");
+      e.printStackTrace();
+      System.out.println("error communicating with the master");
     }
   }
 }

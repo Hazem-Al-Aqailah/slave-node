@@ -10,10 +10,6 @@ public class Cash implements DataBaseUtility {
 
   private Cash() {}
 
-  public static boolean isCashed(String property) {
-    return cashMap.containsKey(property);
-  }
-
   public static void cashProperty(String property, List<JsonNode> listOfNodes) {
     if (isCashed(property)) {
       return;
@@ -21,7 +17,12 @@ public class Cash implements DataBaseUtility {
     cashMap.put(property, listOfNodes);
   }
 
+  public static boolean isCashed(String property) {
+    return cashMap.containsKey(property);
+  }
+
   public static List<JsonNode> getCashedValue(String property) {
+    System.out.println("cash has been used");
     return cashMap.get(property);
   }
 

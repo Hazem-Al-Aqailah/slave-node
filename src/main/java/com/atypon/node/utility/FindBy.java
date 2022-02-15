@@ -7,8 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.atypon.node.utility.PropertyIndex.nameIndex;
-import static com.atypon.node.utility.PropertyIndex.schemaIndex;
+import static com.atypon.node.utility.PropertyIndex.*;
 
 public class FindBy implements DataBaseUtility {
   static DocumentDAO dao = DocumentDAO.getInstance();
@@ -23,6 +22,10 @@ public class FindBy implements DataBaseUtility {
     return getJsonNodes(schema, schemaIndex);
   }
 
+  public static List<JsonNode> date(String date) {
+    return getJsonNodes(date, dateIndex);
+  }
+
   // used to get the list of references for the methods above
   private static List<JsonNode> getJsonNodes(
       String indexedValue, Map<String, ArrayList<String>> indexedMap) {
@@ -34,8 +37,8 @@ public class FindBy implements DataBaseUtility {
       }
       return output;
     } catch (Exception e) {
+      e.printStackTrace();
       System.out.println("no such schema or name");
-      System.out.println(e);
     }
     return output;
   }

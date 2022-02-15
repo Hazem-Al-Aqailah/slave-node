@@ -56,6 +56,21 @@ public class RESTController {
     return ResponseEntity.ok(nodes);
   }
 
+  @GetMapping("bydate/{date}")
+  public ResponseEntity<List<JsonNode>> findByDate(@PathVariable String date) {
+    List<JsonNode> nodes;
+    if (isCashed(date)) {
+      nodes = getCashedValue(date);
+    } else {
+      nodes = FindBy.date(date);
+      if (nodes == null) {
+        return new ResponseEntity(null, HttpStatus.NOT_FOUND);
+      }
+      cashProperty(date, nodes);
+    }
+    return ResponseEntity.ok(nodes);
+  }
+
   @GetMapping("/{id}")
   public ResponseEntity<JsonNode> findById(@PathVariable String id) {
     try {
@@ -70,12 +85,6 @@ public class RESTController {
 
   @PostMapping("/update")
   public ResponseEntity<String> updateData(@RequestBody String serverRequest) {
-    try {
-      return MasterCommunicator.getResponseFromNode(serverRequest);
-    } catch (Exception e) {
-      e.printStackTrace();
-      System.out.println("error communicating with the server" + e);
-    }
-    return new ResponseEntity(null, HttpStatus.NOT_FOUND);
+    return MasterCommunicator.nodeResponse(serverRequest);
   }
 }
